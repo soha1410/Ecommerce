@@ -9,6 +9,10 @@ use Illuminate\Http\Request;
 
 class BrandController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(Brand::class, 'brands');
+    }
     /**
      * Display a listing of the resource.
      *

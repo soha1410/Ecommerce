@@ -10,6 +10,12 @@ class BrandPolicy
 {
     use HandlesAuthorization;
 
+    public function before(User $user, $ability)
+    {
+        if ($user->isAdministrator()) {
+            return true;
+        }
+    }
     /**
      * Determine whether the user can view any models.
      *
@@ -18,7 +24,7 @@ class BrandPolicy
      */
     public function viewAny(User $user)
     {
-        //
+        return true;
     }
 
     /**
@@ -30,7 +36,7 @@ class BrandPolicy
      */
     public function view(User $user, Brand $brand)
     {
-        //
+        return true;
     }
 
     /**
@@ -41,7 +47,7 @@ class BrandPolicy
      */
     public function create(User $user)
     {
-        //
+        return false;
     }
 
     /**
@@ -53,7 +59,7 @@ class BrandPolicy
      */
     public function update(User $user, Brand $brand)
     {
-        //
+        return false;
     }
 
     /**
@@ -65,7 +71,7 @@ class BrandPolicy
      */
     public function delete(User $user, Brand $brand)
     {
-        //
+        return false;
     }
 
     /**
@@ -77,7 +83,7 @@ class BrandPolicy
      */
     public function restore(User $user, Brand $brand)
     {
-        //
+        return false;
     }
 
     /**
@@ -89,6 +95,6 @@ class BrandPolicy
      */
     public function forceDelete(User $user, Brand $brand)
     {
-        //
+        return false;
     }
 }
