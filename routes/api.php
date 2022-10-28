@@ -18,7 +18,25 @@ use Illuminate\Support\Facades\Route;
 */
 
 // Route::middleware()->group(function () {
-    Route::apiResource('brands', BrandController::class);
+Route::apiResource('brands', BrandController::class);
+Route::apiResource('categories', CategoryController::class);
+Route::apiResource('sub_categories', SubCategoryController::class);
+Route::apiResource('sub_category_features', SubCategoryFeatureController::class);
+Route::apiResource('products', ProductController::class);
+Route::apiResource('product_features', ProductFeatureController::class);
+Route::apiResource('product_galleries', ProductGalleryController::class);
+Route::apiResource('users', UserController::class);
+Route::apiResource('purchases', PurchaseController::class);
+Route::apiResource('purchase_items', PurchaseItemController::class);
 // });
 Route::post('register', [AuthController::class, 'register']);
 Route::post('login', [AuthController::class, 'login']);
+Route::post('requestCode', [AuthController::class, 'requestCode']);
+//add to cart
+//remove from cart
+//finialize
+// get products
+//search
+//get products by category
+//get products by sub category
+// activate

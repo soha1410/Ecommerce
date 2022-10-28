@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\UserLoginRequest;
 use App\Http\Requests\UserRegisterRequest;
+use App\Http\Requests\UserRequestCodeRequest;
+use App\Models\Activation;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -11,6 +13,12 @@ class AuthController extends Controller
 {
     public function register(UserRegisterRequest $request)
     {
+        $activation = Activation::where(['phone' => $request->phone, 'code' => $request->code])->first();
+        if (!$activation) {
+            return ['status' => 'error', 'message' => 'phone not verified'];
+        }
+        $activation->delete();
+
         $user = User::create([
             'first_name' => $request->first_name,
             'last_name' => $request->last_name,
@@ -22,7 +30,12 @@ class AuthController extends Controller
 
         return $this->respondWithToken($token);
     }
-
+    public function requestCode(UserRequestCodeRequest $request)
+    {
+        $code = rand(100000, 999999);
+        Activation::create(['phone' => $request->mobile, 'code' => $code]);
+        return ['status' => 'ok', 'message' => 'code sent'];
+    }
     public function login(UserLoginRequest $request)
     {
         $credentials = $request->only(['phone', 'password']);

@@ -6,6 +6,7 @@ use App\Http\Requests\BrandRequest;
 use App\Http\Resources\BrandResource;
 use App\Models\Brand;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class BrandController extends Controller
 {
@@ -34,8 +35,13 @@ class BrandController extends Controller
         $book = Brand::create([
             'name' => $request->name,
         ]);
-
-        return (new BrandResource($book))->response()->setStatusCode(201);
+        if (Cache::has('brands')) {
+            $brands = Cache::get('brands');
+        } else {
+            $brands = (new BrandResource($book))->response()->setStatusCode(201);
+            Cache::put('brands', $brands, 3600);
+        }
+        return $brands;
     }
 
     /**
@@ -46,7 +52,14 @@ class BrandController extends Controller
      */
     public function show(Brand $brand)
     {
-        return (new BrandResource($brand))->response()->setStatusCode(200);
+        if (Cache::has('brand' . $brand->id)) {
+            $brand = Cache::get('brands');
+        } else {
+            $brandId = $brand->id;
+            $brand = (new BrandResource($brand))->response()->setStatusCode(200);
+            Cache::put('brand' . $brandId, $brand, 3600);
+        }
+        return $brand;
     }
 
     /**
@@ -59,6 +72,8 @@ class BrandController extends Controller
     public function update(BrandRequest $request, Brand $brand)
     {
         $brand->update($request->only(['name']));
+        Cache::forget('brands');
+        Cache::forget('brand' . $brand->id);
         return new BrandResource($brand);
     }
 
@@ -71,6 +86,8 @@ class BrandController extends Controller
     public function destroy(Brand $brand)
     {
         $brand->delete();
+        Cache::forget('brands');
+        Cache::forget('brand' . $brand->id);
         return response()->json(null, 204);
     }
 }
