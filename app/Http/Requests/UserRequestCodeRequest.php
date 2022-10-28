@@ -24,7 +24,7 @@ class UserRequestCodeRequest extends FormRequest
     public function rules()
     {
         return [
-            'mobile'=> 'required:size:11'
+            'phone'=> 'required:size:11'
         ];
     }
 }

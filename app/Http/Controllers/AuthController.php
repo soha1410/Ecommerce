@@ -33,7 +33,7 @@ class AuthController extends Controller
     public function requestCode(UserRequestCodeRequest $request)
     {
         $code = rand(100000, 999999);
-        Activation::create(['phone' => $request->mobile, 'code' => $code]);
+        Activation::create(['phone' => $request->phone, 'code' => $code]);
         return ['status' => 'ok', 'message' => 'code sent'];
     }
     public function login(UserLoginRequest $request)
